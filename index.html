@@ -8,88 +8,181 @@
 <style>
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #14000b, #3b001c, #12000a);
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at top, #5c1235 0%, #240014 45%, #090006 100%);
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
-.container {
-  width: 92%;
-  max-width: 450px;
+button, input {
+  font-family: inherit;
+}
+
+.page {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  padding: 30px 20px;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  animation: pageIn 0.8s ease;
+}
+
+.page.active {
+  display: flex;
+}
+
+.content {
+  width: 100%;
+  max-width: 650px;
   padding: 35px 25px;
-  border-radius: 25px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(15px);
-  box-shadow: 0 0 40px rgba(255,0,100,0.25);
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 h1 {
-  font-size: 32px;
+  font-size: clamp(36px, 10vw, 65px);
+  margin-bottom: 18px;
+}
+
+h2 {
+  font-size: clamp(28px, 7vw, 45px);
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 22px;
   margin-bottom: 10px;
 }
 
 p {
-  color: #ffd6e5;
-  line-height: 1.6;
+  color: #ffd9e7;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+.subtitle {
+  color: #ff9fc2;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.glass {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(15px);
+  border-radius: 28px;
+  padding: 30px 22px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+.heart {
+  font-size: 75px;
+  animation: heartbeat 1.2s infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.16); }
 }
 
 input {
   width: 100%;
-  padding: 16px;
-  margin-top: 20px;
-  border: none;
-  border-radius: 14px;
-  outline: none;
-  text-align: center;
-  font-size: 16px;
-}
-
-button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 14px;
-  background: #ff2d75;
+  max-width: 400px;
+  padding: 16px 20px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(0,0,0,.35);
   color: white;
-  font-size: 17px;
-  font-weight: bold;
+  border-radius: 15px;
+  outline: none;
+  font-size: 16px;
+  text-align: center;
+  margin: 15px 0;
+}
+
+input::placeholder {
+  color: #cba7b5;
+}
+
+.btn {
+  border: none;
+  background: linear-gradient(135deg,#ff397d,#c2185b);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  font-size: 16px;
   cursor: pointer;
+  margin: 8px;
+  box-shadow: 0 10px 30px rgba(255,30,110,.25);
+  transition: .25s;
 }
 
-button:active {
-  transform: scale(0.97);
+.btn:hover {
+  transform: translateY(-3px) scale(1.03);
 }
 
-#surprise {
-  display: none;
+.btn:active {
+  transform: scale(.96);
 }
 
-.heart {
+.error {
+  min-height: 25px;
+  color: #ff8caf;
+  margin-top: 8px;
+}
+
+.nav {
+  margin-top: 25px;
+}
+
+.progress {
   position: fixed;
-  bottom: -20px;
-  font-size: 22px;
-  animation: float 6s linear infinite;
-  opacity: 0.7;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: #ff397d;
+  width: 0%;
+  z-index: 100;
+  transition: .5s;
 }
 
-@keyframes float {
+/* Floating hearts */
+
+.floating-heart {
+  position: fixed;
+  bottom: -30px;
+  pointer-events: none;
+  animation: floatUp linear forwards;
+  z-index: 0;
+}
+
+@keyframes floatUp {
   from {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(0) rotate(0);
     opacity: 0;
   }
-  20% {
-    opacity: 1;
+  15% {
+    opacity: .8;
   }
   to {
     transform: translateY(-110vh) rotate(360deg);
@@ -97,156 +190,953 @@ button:active {
   }
 }
 
-.big-heart {
-  font-size: 70px;
-  animation: beat 1s infinite alternate;
+/* Page 4 memories */
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+  margin: 25px 0;
 }
 
-@keyframes beat {
-  to {
-    transform: scale(1.15);
+.memory {
+  min-height: 150px;
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg,rgba(255,80,140,.25),rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.memory span {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Reasons */
+
+.reason-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.reason {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  text-align: left;
+  transition: .3s;
+}
+
+.reason:hover {
+  transform: translateX(7px);
+}
+
+/* Letter */
+
+.envelope {
+  width: 220px;
+  height: 145px;
+  margin: 25px auto;
+  position: relative;
+  cursor: pointer;
+}
+
+.envelope-body {
+  position: absolute;
+  inset: 0;
+  background: #f5b6c9;
+  border-radius: 8px;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 110px solid transparent;
+  border-right: 110px solid transparent;
+  border-top: 75px solid #d77c9c;
+  transform-origin: top;
+  transition: .7s;
+  z-index: 3;
+}
+
+.letter {
+  position: absolute;
+  width: 190px;
+  height: 120px;
+  background: #fff9fb;
+  color: #56122f;
+  left: 15px;
+  bottom: 8px;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  transition: .7s;
+  z-index: 2;
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.envelope.open .letter {
+  transform: translateY(-90px);
+}
+
+/* Future */
+
+.future-list {
+  display: grid;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.future-item {
+  padding: 17px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.07);
+}
+
+/* Question */
+
+.question-buttons {
+  position: relative;
+  min-height: 120px;
+  margin-top: 20px;
+}
+
+#noBtn {
+  position: absolute;
+  transition: .2s;
+}
+
+/* Final */
+
+.final-heart {
+  font-size: 100px;
+  animation: heartbeat 1s infinite;
+}
+
+.names {
+  font-size: clamp(27px,7vw,45px);
+  color: #ff9fc2;
+  margin: 20px 0;
+}
+
+.signature {
+  color: #ffc4d8;
+  font-style: italic;
+  margin-top: 25px;
+}
+
+.small {
+  font-size: 13px;
+  color: #b98b9d;
+}
+
+/* Sparkles */
+
+.sparkle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  opacity: .6;
+  animation: sparkle 2s infinite alternate;
+}
+
+@keyframes sparkle {
+  from { opacity: .1; transform: scale(.5); }
+  to { opacity: 1; transform: scale(1.5); }
+}
+
+@media(max-width:500px) {
+  .memory-grid {
+    grid-template-columns: 1fr;
   }
-}
 
-.error {
-  color: #ff8fb5;
-  margin-top: 12px;
-  min-height: 20px;
+  .content {
+    padding: 25px 10px;
+  }
+
+  .glass {
+    padding: 25px 18px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="login">
+<div class="progress" id="progress"></div>
 
-  <div class="big-heart">❤️</div>
+<!-- ========================= -->
+<!-- PAGE 1 -->
+<!-- ========================= -->
 
-  <h1>Hey Judy...</h1>
+<section class="page active" id="page1">
+<div class="content">
+<div class="glass">
 
-  <p>
-    I made something special for you.<br>
-    But first, you need the secret password. 🔐
-  </p>
+<div class="heart">❤️</div>
 
-  <input
-    type="text"
-    id="password"
-    placeholder="Enter the secret password"
-    autocomplete="off"
-  >
+<div class="subtitle">A secret place</div>
 
-  <button onclick="unlock()">Unlock My Heart 💖</button>
+<h1>Hey Judy...</h1>
 
-  <div class="error" id="error"></div>
+<p>
+I made a little world just for you.
+</p>
+
+<p>
+But there's one little door standing between
+you and the surprise. 🔐
+</p>
+
+<input
+id="password"
+type="text"
+placeholder="Enter the secret password"
+autocomplete="off"
+>
+
+<br>
+
+<button class="btn" onclick="unlock()">
+Unlock My Heart 💖
+</button>
+
+<div class="error" id="error"></div>
+
+<p class="small">
+Hint: It's something that belongs to my heart.
+</p>
+
+</div>
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 2 -->
+<!-- ========================= -->
+
+<section class="page" id="page2">
+<div class="content">
+<div class="glass">
+
+<div class="heart">💗</div>
+
+<div class="subtitle">Access granted</div>
+
+<h1>Welcome, Judy</h1>
+
+<p id="welcomeText"></p>
+
+<p>
+You officially made it into my little
+corner of the internet. 🥹
+</p>
+
+<button class="btn" onclick="nextPage()">
+Enter My World ✨
+</button>
+
+</div>
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 3 -->
+<!-- ========================= -->
+
+<section class="page" id="page3">
+<div class="content">
+
+<div class="subtitle">Chapter 01</div>
+
+<h2>Our Little Story 🌸</h2>
+
+<div class="glass">
+
+<p>
+Every beautiful story begins somewhere.
+</p>
+
+<p>
+Ours may not have started with fireworks,
+perfect music and a movie scene...
+</p>
+
+<p>
+But somehow, somewhere along the way,
+you became someone incredibly special to me.
+</p>
+
+<p>
+And now when I think about happiness,
+your name somehow appears in the picture.
+❤️
+</p>
 
 </div>
 
-
-<div class="container" id="surprise">
-
-  <div class="big-heart">💖</div>
-
-  <h1>Yes, Judy...</h1>
-
-  <p>
-    You're the only one. ❤️
-  </p>
-
-  <p>
-    Out of all the people in this world,
-    somehow my heart found you.
-  </p>
-
-  <p>
-    And honestly...
-    I wouldn't want it any other way. 🥹❤️
-  </p>
-
-  <button onclick="love()">One More Thing 💌</button>
+<div class="nav">
+<button class="btn" onclick="nextPage()">Continue →</button>
+</div>
 
 </div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 4 -->
+<!-- ========================= -->
+
+<section class="page" id="page4">
+<div class="content">
+
+<div class="subtitle">Chapter 02</div>
+
+<h2>Our Memories 📸</h2>
+
+<p>
+These spaces are waiting for our favourite moments.
+</p>
+
+<div class="memory-grid">
+
+<div class="memory">
+<div>
+<span>📷</span>
+<h3>That Smile</h3>
+<p>One of my favourite views.</p>
+</div>
+</div>
+
+<div class="memory">
+<div>
+<span>🥰</span>
+<h3>Our Moments</h3>
+<p>The little things matter.</p>
+</div>
+</div>
+
+<div class="memory">
+<div>
+<span>🌙</span>
+<h3>Late Talks</h3>
+<p>Conversations I never want to end.</p>
+</div>
+</div>
+
+<div class="memory">
+<div>
+<span>❤️</span>
+<h3>Us</h3>
+<p>My favourite chapter.</p>
+</div>
+</div>
+
+</div>
+
+<p class="small">
+You can later replace these boxes with your real photos.
+</p>
+
+<button class="btn" onclick="nextPage()">Next Memory →</button>
+
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 5 -->
+<!-- ========================= -->
+
+<section class="page" id="page5">
+<div class="content">
+
+<div class="subtitle">Chapter 03</div>
+
+<h2>10 Reasons I Love You 🥰</h2>
+
+<div class="reason-grid">
+
+<div class="reason">❤️ Your smile can change my entire mood.</div>
+
+<div class="reason">🌸 You make ordinary moments feel special.</div>
+
+<div class="reason">🥹 You understand the parts of me I don't always explain.</div>
+
+<div class="reason">✨ You have a way of making my world brighter.</div>
+
+<div class="reason">🤍 I can be myself around you.</div>
+
+<div class="reason">😂 You make me laugh when I need it most.</div>
+
+<div class="reason">🌙 Even simple conversations with you feel special.</div>
+
+<div class="reason">🫶 You make me want to become a better person.</div>
+
+<div class="reason">💗 You became one of the most important people in my life.</div>
+
+<div class="reason">♾️ And simply... because you're Judy.</div>
+
+</div>
+
+<button class="btn" onclick="nextPage()">Keep Going ❤️</button>
+
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 6 -->
+<!-- ========================= -->
+
+<section class="page" id="page6">
+<div class="content">
+
+<div class="subtitle">Chapter 04</div>
+
+<h2>Our Song 🎵</h2>
+
+<div class="glass">
+
+<div style="font-size:70px;margin-bottom:20px;">
+🎧
+</div>
+
+<h3>Press Play In Your Imagination...</h3>
+
+<p>
+Imagine our favourite song playing softly
+while you're reading this.
+</p>
+
+<p>
+Every song has a feeling.
+For me, some songs will always remind me of you.
+</p>
+
+<p>
+Because sometimes music says the things
+that words cannot.
+🎶❤️
+</p>
+
+<button class="btn" onclick="nextPage()">
+Next Chapter →
+</button>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 7 -->
+<!-- ========================= -->
+
+<section class="page" id="page7">
+<div class="content">
+
+<div class="subtitle">Chapter 05</div>
+
+<h2>A Letter For Judy 💌</h2>
+
+<p>
+Tap the envelope.
+</p>
+
+<div class="envelope" id="envelope" onclick="openLetter()">
+
+<div class="envelope-body"></div>
+
+<div class="letter">
+<strong>Dear Judy,</strong><br><br>
+I don't know if words can ever
+properly explain how much you
+mean to me.
+<br><br>
+But I hope you always remember
+that you are loved.
+<br><br>
+❤️ Pavithran
+</div>
+
+<div class="envelope-flap"></div>
+
+</div>
+
+<button class="btn" onclick="nextPage()">
+Continue 💕
+</button>
+
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 8 -->
+<!-- ========================= -->
+
+<section class="page" id="page8">
+<div class="content">
+
+<div class="subtitle">Chapter 06</div>
+
+<h2>Our Future 🌙</h2>
+
+<div class="glass">
+
+<p>
+There are so many things I want us
+to experience together.
+</p>
+
+<div class="future-list">
+
+<div class="future-item">🌍 Travel somewhere we've never been.</div>
+
+<div class="future-item">🌅 Watch a sunrise together.</div>
+
+<div class="future-item">🍿 Have countless movie nights.</div>
+
+<div class="future-item">😂 Laugh at stupid things until we can't breathe.</div>
+
+<div class="future-item">📸 Create thousands of memories.</div>
+
+<div class="future-item">🏡 Build a beautiful life together.</div>
+
+<div class="future-item">♾️ Keep choosing each other.</div>
+
+</div>
+
+<p>
+The destination isn't the important part.
+It's who I get to share the journey with.
+❤️
+</p>
+
+</div>
+
+<button class="btn" onclick="nextPage()">
+One More Chapter →
+</button>
+
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 9 -->
+<!-- ========================= -->
+
+<section class="page" id="page9">
+<div class="content">
+
+<div class="subtitle">Chapter 07</div>
+
+<h2>One Question... 💍</h2>
+
+<div class="glass">
+
+<div style="font-size:65px;margin-bottom:20px;">
+🥹❤️
+</div>
+
+<p style="font-size:22px;">
+Judy...
+</p>
+
+<p style="font-size:24px;color:white;">
+Will you stay beside me
+through all the chapters
+that are still waiting for us?
+</p>
+
+<div class="question-buttons">
+
+<button class="btn" onclick="yesAnswer()">
+YES ❤️
+</button>
+
+<button
+class="btn"
+id="noBtn"
+onmouseover="moveNo()"
+onclick="moveNo()">
+NO 😜
+</button>
+
+</div>
+
+<p id="answerText"></p>
+
+</div>
+
+</div>
+</section>
+
+
+<!-- ========================= -->
+<!-- PAGE 10 -->
+<!-- ========================= -->
+
+<section class="page" id="page10">
+<div class="content">
+
+<div class="final-heart">❤️</div>
+
+<div class="subtitle">The End... or the beginning?</div>
+
+<h1>Judy</h1>
+
+<div class="names">
+Pavithran ❤️ Judy
+</div>
+
+<div class="glass">
+
+<h2>You're The Only One.</h2>
+
+<p>
+Out of billions of people,
+somehow my heart found you.
+</p>
+
+<p>
+And if life gives me the chance
+to choose again...
+</p>
+
+<p style="font-size:23px;color:white;">
+I'd still choose you.
+❤️
+</p>
+
+<p>
+Not just for today.<br>
+Not just for tomorrow.<br>
+But for every beautiful chapter
+that comes after.
+</p>
+
+<p class="signature">
+With all my heart,<br>
+Pavithran ❤️
+</p>
+
+</div>
+
+<button class="btn" onclick="celebrate()">
+Replay Our Story ✨
+</button>
+
+</div>
+</section>
 
 
 <script>
 
+let currentPage = 1;
+const totalPages = 10;
+
+
+/* PASSWORD */
+
 function unlock() {
 
-  const entered = document
-    .getElementById("password")
-    .value
-    .trim();
+  const password =
+    document.getElementById("password").value.trim();
 
-  const correctPassword = "Pavithran's_wife";
+  const correctPassword =
+    "Pavithran's_wife";
 
-  if (entered === correctPassword) {
+  if (password === correctPassword) {
 
-    document.getElementById("login").style.display = "none";
-    document.getElementById("surprise").style.display = "block";
+    showPage(2);
+
+    typeWriter(
+      "You found the secret door... and now you're officially inside my heart. ❤️",
+      "welcomeText"
+    );
 
   } else {
 
     document.getElementById("error").innerText =
-      "Hmm... that's not the secret password 😏❤️";
+      "Not quite... try again, Judy 😏❤️";
 
   }
 }
 
 
-function love() {
+/* ENTER KEY */
 
-  document.getElementById("surprise").innerHTML = `
-    <div class="big-heart">💗</div>
+document.getElementById("password").addEventListener(
+  "keydown",
+  function(event) {
 
-    <h1>Judy ❤️</h1>
+    if (event.key === "Enter") {
+      unlock();
+    }
 
-    <p>
-      You are not just someone I love...
-    </p>
+  }
+);
 
-    <p>
-      You are the person I want beside me
-      through all the chapters of my life.
-    </p>
 
-    <p>
-      <strong>
-      My favourite person.<br>
-      My happiness.<br>
-      My forever. ❤️
-      </strong>
-    </p>
+/* PAGE CONTROL */
 
-    <p>
-      — Pavithran
-    </p>
-  `;
+function showPage(number) {
+
+  document
+    .querySelectorAll(".page")
+    .forEach(function(page) {
+      page.classList.remove("active");
+    });
+
+  const target =
+    document.getElementById("page" + number);
+
+  if (target) {
+    target.classList.add("active");
+  }
+
+  currentPage = number;
+
+  document.getElementById("progress").style.width =
+    ((number - 1) / (totalPages - 1) * 100) + "%";
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+function nextPage() {
+
+  if (currentPage < totalPages) {
+    showPage(currentPage + 1);
+  }
 
 }
 
 
-// Floating hearts
+/* TYPEWRITER */
 
-setInterval(function() {
+function typeWriter(text, elementId) {
 
-  const heart = document.createElement("div");
+  const element =
+    document.getElementById(elementId);
 
-  heart.className = "heart";
-  heart.innerHTML = "❤️";
+  element.innerHTML = "";
+
+  let i = 0;
+
+  function type() {
+
+    if (i < text.length) {
+
+      element.innerHTML += text.charAt(i);
+
+      i++;
+
+      setTimeout(type, 35);
+
+    }
+
+  }
+
+  type();
+}
+
+
+/* LETTER */
+
+function openLetter() {
+
+  document
+    .getElementById("envelope")
+    .classList.add("open");
+
+}
+
+
+/* NO BUTTON */
+
+function moveNo() {
+
+  const button =
+    document.getElementById("noBtn");
+
+  const area =
+    document.querySelector(".question-buttons");
+
+  const maxX =
+    area.clientWidth - button.offsetWidth;
+
+  const maxY =
+    area.clientHeight - button.offsetHeight;
+
+  button.style.left =
+    Math.random() * Math.max(maxX, 0) + "px";
+
+  button.style.top =
+    Math.random() * Math.max(maxY, 0) + "px";
+
+}
+
+
+function yesAnswer() {
+
+  document.getElementById("answerText").innerHTML =
+    "I knew it. 🥹❤️ Now there's only one thing left...";
+
+  setTimeout(function() {
+    showPage(10);
+    celebrate();
+  }, 1800);
+
+}
+
+
+/* FLOATING HEARTS */
+
+function createHeart() {
+
+  const heart =
+    document.createElement("div");
+
+  heart.className = "floating-heart";
+
+  const hearts = [
+    "❤️",
+    "💕",
+    "💗",
+    "💖",
+    "💘",
+    "💞"
+  ];
+
+  heart.innerText =
+    hearts[Math.floor(Math.random() * hearts.length)];
 
   heart.style.left =
     Math.random() * 100 + "vw";
 
+  heart.style.fontSize =
+    (14 + Math.random() * 22) + "px";
+
   heart.style.animationDuration =
-    (4 + Math.random() * 4) + "s";
+    (5 + Math.random() * 5) + "s";
 
   document.body.appendChild(heart);
 
   setTimeout(function() {
     heart.remove();
-  }, 8000);
+  }, 10000);
 
-}, 700);
+}
+
+setInterval(createHeart, 650);
+
+
+/* SPARKLES */
+
+for (let i = 0; i < 30; i++) {
+
+  const sparkle =
+    document.createElement("div");
+
+  sparkle.className = "sparkle";
+
+  sparkle.style.left =
+    Math.random() * 100 + "vw";
+
+  sparkle.style.top =
+    Math.random() * 100 + "vh";
+
+  sparkle.style.animationDelay =
+    Math.random() * 2 + "s";
+
+  document.body.appendChild(sparkle);
+
+}
+
+
+/* FINAL CELEBRATION */
+
+function celebrate() {
+
+  for (let i = 0; i < 50; i++) {
+
+    setTimeout(function() {
+
+      const heart =
+        document.createElement("div");
+
+      heart.innerText =
+        ["❤️","💖","💕","💗","✨"][Math.floor(Math.random()*5)];
+
+      heart.style.position = "fixed";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "-30px";
+      heart.style.fontSize =
+        (18 + Math.random() * 25) + "px";
+      heart.style.zIndex = "999";
+      heart.style.transition =
+        "transform 3s linear, opacity 3s linear";
+
+      document.body.appendChild(heart);
+
+      setTimeout(function() {
+
+        heart.style.transform =
+          "translateY(110vh) rotate(720deg)";
+
+        heart.style.opacity = "0";
+
+      }, 50);
+
+      setTimeout(function() {
+        heart.remove();
+      }, 3500);
+
+    }, i * 50);
+
+  }
+
+}
+
+
+/* REPLAY */
+
+document.querySelector("#page10 .btn")
+.addEventListener("click", function() {
+
+  showPage(1);
+
+  document.getElementById("password").value = "";
+
+  document.getElementById("error").innerText = "";
+
+});
 
 </script>
 
